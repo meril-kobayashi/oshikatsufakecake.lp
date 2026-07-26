@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>推し活フェイクケーキ | 世界に1つの推し色ケーキ</title>
+
+<!-- ===================================================================
+  推し活フェイクケーキ LP（スマホ最適化・1ファイル完結）v2
+
+  ▼ 自分の素材に差し替える場所（キーワードで検索できます）
+   [TITLE IMAGE] … タイトルを自作画像に差し替え
+   [ICON]        … アイコンを自作イラスト(<img>)に差し替え
+   [IMAGE]       … 写真プレースホルダーを実写真に差し替え
+   [SLIDE]       … 流れる写真スライドの各カット
+   [EDIT]        … 文言の差し替え
+   [LINK]        … ボタンのリンク先URL
+   [FONT]        … フォントの読み込み・指定
+   [COLOR]       … 色（:root の変数を変えると全体が一括変更）
+==================================================================== -->
+
+<!-- [FONT] フォント読み込み：ここのfamily名を変えれば別フォントに。
+     Google Fontsで好きな日本語フォントを選び、下のURLとCSSのfont-familyを差し替え -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Kaisei+Decol:wght@700&family=Yomogi&family=Baloo+2:wght@600;800&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+/* ===== [COLOR] カラーパレット（ここだけで全体の色が変わる）===== */
+:root{
+  --pink:      #f7c5d3;
+  --pink-deep: #f3a7bd;
+  --pink-bg:   #fdeef3;
+  --blue:      #cfe3f3;
+  --yellow:    #f6efc9;
+  --greige:    #ece7df;
+  --ink:       #6A6A6A;
+  --ink-soft:  #9a8a92;
+  --white:     #ffffff;
+  --radius:    22px;
+}
+
+/* ===== [FONT] フォント指定 =====
+   本文 / 見出し / 英字 / 手書き で使い分け。名前を差し替えれば変更できます */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN",sans-serif; /* 本文 */
+  color:var(--ink);background:var(--pink-bg);line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+.jp-title{font-family:"Kaisei Decol","Zen Maru Gothic",serif;}  /* 見出し用 */
+.en{font-family:"Baloo 2",sans-serif;letter-spacing:.05em;}      /* 英字ラベル */
+.hand{font-family:"Yomogi",cursive;}                              /* 手書き風 */
+
+.wrap{max-width:430px;margin:0 auto;background:var(--white);overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,.05);padding-bottom:90px;}
+img{display:block;width:100%;}
+section{padding:26px 20px;position:relative;}
+.sec-label{font-size:11.5px;letter-spacing:.16em;color:var(--pink-deep);
+  text-align:center;margin-bottom:4px;font-weight:800;}
+.sec-title{font-size:22px;font-weight:700;text-align:center;line-height:1.45;
+  margin-bottom:18px;}
+.sec-title small{display:block;font-size:13px;color:var(--ink-soft);
+  font-weight:600;margin-top:6px;font-family:"Zen Maru Gothic",sans-serif;}
+.hl{color:var(--pink-deep);}
+.mark{background:linear-gradient(transparent 55%, #ffe4ec 55%);padding:0 2px;}
+
+/* ===== 差し替え用プレースホルダー ===== */
+.ph{background:
+   repeating-linear-gradient(45deg,var(--pink-bg),var(--pink-bg) 12px,#fff 12px,#fff 24px);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  color:var(--ink-soft);font-size:12px;border-radius:var(--radius);
+  aspect-ratio:700/302;border:1px dashed var(--pink);padding:8px;}
+.ph.wide{aspect-ratio:4/3;}
+
+/* ===== アイコン共通（自作イラストの<img>に差し替え可）===== */
+.ico{width:48px;height:48px;flex-shrink:0;display:inline-flex;
+  align-items:center;justify-content:center;color:var(--pink-deep);}
+.ico svg{width:100%;height:100%;}
+.ico img{width:100%;height:100%;object-fit:contain;} /* <img>差し替え時用 */
+
+/* ============ ① 帯 ============ */
+.topbar{background:#fff;height:40px;overflow:hidden;border-bottom:1px solid #f6d6e0;}
+/* [TICKER IMAGE] 流れる画像。差し替えは下の url(...) を新しい画像に。
+   ループを滑らかにするには @keyframes の -293.9px を「表示高さ22px×画像の横縦比」に合わせる */
+.ticker{height:100%;background-image:url('images/img01.png');
+  background-repeat:repeat-x;background-size:auto 22px;background-position:0 center;
+  animation:ticker 20s linear infinite;}
+.topbar:hover .ticker{animation-play-state:paused;}
+@keyframes ticker{from{background-position:0 center}to{background-position:-347.9px center}}
+
+/* ============ ② ファーストビュー ============ */
+.fv{background:radial-gradient(120% 90% at 50% 0%, var(--pink-bg) 0%, #fff 70%);
+  text-align:center;padding:20px 20px 0;}
+.fv .en-title{font-size:13px;letter-spacing:.22em;color:var(--pink-deep);margin-bottom:12px;}
+/* [TITLE IMAGE] 下のブロックを丸ごと自作タイトル画像に差し替え：
+     <img src="title.png" alt="推し活歴20年が作る 世界に1つの推し色ケーキ"> */
+.title-img{width:calc(100% + 40px);margin:0 -20px 12px;aspect-ratio:16/7;font-weight:700;
+  font-size:14px;color:var(--pink-deep);border-top:1.5px dashed var(--pink);
+  border-bottom:1.5px dashed var(--pink);border-radius:0;display:flex;
+  align-items:center;justify-content:center;text-align:center;background:#fff;
+  line-height:1.6;overflow:hidden;}
+/* [TITLE IMAGE] 全幅表示用。差し替えは下のブロックを丸ごと
+   <img class="fv-fullimg" src="title.png" alt="世界に1つの推し色ケーキ"> に置き換え */
+.fv-fullimg{width:calc(100% + 40px);margin:0 -20px 12px;display:block;height:auto;}
+/* [FONT] 細めゴシック（丸みなし）。Noto Sans JP Light / iPhoneはヒラギノ角ゴ */
+.fv .sub{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
+  font-weight:300;font-size:12px;color:#3a3a3a;line-height:1.9;margin:12px 0 16px;
+  letter-spacing:.01em;}
+.cta-img-btn.fv-cta{margin-top:4px;max-width:213px;}
+.sub-strong{font-weight:700;color:#6A6A6A;}
+/* [EDIT] 悩み→解決のつなぎリード（余白ピンク埋め）*/
+.solve-lead{width:calc(100% + 40px);margin:0 -20px;background:#FBEAF0;
+  text-align:center;font-weight:800;color:#6A6A6A;font-size:17px;
+  letter-spacing:.08em;padding:16px 0 6px;}
+.fv-img{position:relative;margin:0 auto 18px;max-width:300px;}
+/* [IMAGE] メイン写真3枚グリッド＋斜めストライプ背景 */
+.mainshots{width:calc(100% + 40px);margin:0 -20px 16px;
+  padding:0 10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.mainshots img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;
+  display:block;box-shadow:0 3px 8px rgba(0,0,0,.10);}
+.fv-badge{position:absolute;top:-6px;right:-6px;background:var(--yellow);
+  color:var(--ink);font-size:11px;font-weight:800;border-radius:50%;
+  width:74px;height:74px;display:flex;align-items:center;justify-content:center;
+  text-align:center;line-height:1.3;transform:rotate(9deg);
+  box-shadow:0 4px 10px rgba(0,0,0,.08);padding:6px;}
+.stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px;}
+.stat{background:var(--white);border:2px solid var(--pink);border-radius:16px;
+  padding:9px 4px;flex:1;min-width:92px;box-shadow:0 3px 0 var(--pink-bg);}
+.stat b{display:block;font-size:20px;color:var(--pink-deep);font-weight:800;line-height:1.2;}
+.stat b small{font-size:11px;}
+.stat span{font-size:10.5px;color:var(--ink-soft);}
+/* [EDIT] ベネフィット枠 4列×2列 */
+.benefit-grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0 4px;}
+.bchip{background:#fff;border:1.5px solid #f7d7e1;border-radius:13px;padding:9px 4px;
+  text-align:center;box-shadow:0 3px 6px rgba(243,167,189,.2);
+  display:flex;flex-direction:column;justify-content:center;}
+.bchip b{color:var(--pink-deep);font-weight:800;font-size:11px;line-height:1.3;margin-bottom:4px;}
+.bchip b.b2{color:#5fb890;}
+.bchip span{color:#6A6A6A;font-size:9px;line-height:1.35;}
+.keyword{display:inline-block;margin-top:16px;background:var(--pink-deep);color:#fff;
+  font-size:14px;font-weight:800;padding:7px 18px;border-radius:999px;
+  transform:rotate(-2deg);box-shadow:0 3px 8px rgba(243,167,189,.5);}
+
+/* ============ ★ 流れる写真スライド（marquee）============ */
+.gallery{padding:0 0 10px;background:#FBEAF0;overflow:hidden;}
+.marquee{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.m-track{display:flex;gap:12px;width:max-content;padding:0 6px;}
+.m-track.left{animation:scroll-left 24s linear infinite;}
+.m-track.right{animation:scroll-right 24s linear infinite;margin-top:12px;}
+.m-item{width:150px;height:150px;flex-shrink:0;border-radius:18px;overflow:hidden;
+  box-shadow:0 6px 14px rgba(243,167,189,.25);}
+/* [SLIDE] 各カットを実写真に差し替え（.ph を <img> に）*/
+.m-item .ph{aspect-ratio:1/1;border-radius:18px;height:100%;}
+@keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scroll-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+
+/* ============ ③ CTAボタン（ボンボンドロップ艶＋オーロラ）============ */
+.cta-zone{text-align:center;padding:20px 20px 0;}
+.bonbon{position:relative;display:inline-block;width:88%;max-width:340px;
+  padding:19px 20px;border-radius:999px;border:none;cursor:pointer;
+  font-size:17px;font-weight:800;color:#fff;text-decoration:none;
+  background:linear-gradient(180deg,#ffb6cf 0%,var(--pink-deep) 60%,#e88aa6 100%);
+  box-shadow:0 10px 22px rgba(243,167,189,.55),
+             inset 0 3px 6px rgba(255,255,255,.65),
+             inset 0 -6px 10px rgba(200,110,140,.35);
+  overflow:hidden;isolation:isolate;animation:bob 2.6s ease-in-out infinite;}
+.bonbon .txt{position:relative;z-index:3;text-shadow:0 1px 2px rgba(180,90,120,.4);}
+.bonbon::before{content:"";position:absolute;top:6px;left:16%;width:68%;height:34%;
+  border-radius:50%;background:rgba(255,255,255,.75);filter:blur(2px);z-index:2;
+  animation:shine-move 3.2s ease-in-out infinite;}
+.bonbon::after{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(115deg,transparent 20%,
+     rgba(180,220,255,.55) 38%, rgba(255,200,240,.6) 50%,
+     rgba(210,255,220,.55) 62%, transparent 80%);
+  transform:translateX(-120%);animation:aurora 2.8s ease-in-out infinite;
+  mix-blend-mode:screen;}
+@keyframes aurora{0%{transform:translateX(-120%)}55%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+@keyframes shine-move{0%,100%{opacity:.55}50%{opacity:.95}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.cta-note{font-size:11.5px;color:var(--ink-soft);margin-top:12px;}
+
+/* ============ ④ 問題定義 ============ */
+.problem{background:var(--blue);}
+.prob-list{display:flex;flex-direction:column;gap:12px;}
+.prob{background:#fff;border-radius:16px;padding:13px 16px;display:flex;
+  align-items:center;gap:14px;box-shadow:0 3px 8px rgba(0,0,0,.04);}
+.prob .ico{width:40px;height:40px;}
+.prob p{font-size:14.5px;font-weight:700;}
+.prob-end{text-align:center;font-size:18px;font-weight:700;margin-top:20px;}
+
+/* ============ ⑤ 解決策 ============ */
+.solve{background:#fff;text-align:center;}
+.solve .ico{width:56px;height:56px;margin:0 auto 8px;}
+.solve h2{font-size:20px;font-weight:700;line-height:1.55;margin-bottom:12px;}
+.solve p{font-size:13.5px;color:var(--ink-soft);}
+
+/* ============ ⑥ ベネフィット ============ */
+.benefit-sec{background:var(--pink-bg);}
+.benefit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.bene{background:#fff;border-radius:18px;padding:18px 10px;text-align:center;
+  box-shadow:0 3px 8px rgba(243,167,189,.15);}
+.bene .ico{width:44px;height:44px;margin:0 auto 6px;}
+.bene b{display:block;font-size:14px;font-weight:800;}
+.bene span{font-size:11px;color:var(--ink-soft);}
+.bene:nth-child(2){background:var(--blue);}
+.bene:nth-child(3){background:var(--yellow);}
+.bene:nth-child(6){background:var(--greige);}
+
+/* ============ ⑦ 口コミ（横スワイプ）============ */
+.reviews{background:var(--yellow);}
+/* [EDIT] 口コミ ハート型・横スライド */
+.heart-marquee{overflow:hidden;margin:0 -20px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
+.hm-track{display:flex;gap:6px;width:max-content;padding:4px 0;
+  animation:hmscroll 24s linear infinite;}
+.heart-marquee:hover .hm-track{animation-play-state:paused;}
+.hm-note{text-align:center;font-size:10px;color:#6A6A6A;margin-top:8px;}
+.dm-row{display:flex;gap:8px;overflow-x:auto;padding:10px 20px 2px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
+.dm-row::-webkit-scrollbar{display:none;}
+.dm-row img{width:118px;flex-shrink:0;border-radius:10px;scroll-snap-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);}
+/* [EDIT] 選ばれる理由（クリーム背景）*/
+.reasons{background:#FDFCE8;padding:8px 22px 26px;}
+.reason{display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;}
+.reason .rnum{flex-shrink:0;width:34px;height:34px;border-radius:50%;
+  background:var(--pink-deep);color:#fff;font-family:"Baloo 2",sans-serif;font-weight:800;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  box-shadow:0 3px 6px rgba(243,167,189,.4);}
+.reason p{font-size:14px;color:#6A6A6A;line-height:1.65;}
+.reason b{font-weight:800;color:#6A6A6A;}
+.reason .secret{color:var(--pink-deep);font-weight:800;font-size:13px;}
+/* [EDIT] お客様の声を紹介 */
+.voice-intro{margin-top:10px;}
+.vi-title{text-align:center;font-weight:800;color:var(--pink-deep);font-size:16px;margin:4px 0 14px;}
+.vi-card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.vi-card p{font-size:13.5px;color:#6A6A6A;line-height:1.6;font-weight:700;}
+.vi-oshi{display:inline-block;margin-top:8px;font-size:11px;color:var(--pink-deep);font-weight:700;}
+.vi-note{text-align:center;font-size:10px;color:#6A6A6A;margin-top:4px;}
+/* [IMAGE] 制作事例スライド */
+.work-marquee{overflow:hidden;margin:14px -22px 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+.wm-track{display:flex;gap:8px;width:max-content;padding:0 4px;animation:wmscroll 44s linear infinite;}
+.work-marquee:hover .wm-track{animation-play-state:paused;}
+.wm-track img{width:130px;height:130px;object-fit:cover;border-radius:12px;flex-shrink:0;
+  box-shadow:0 3px 8px rgba(0,0,0,.12);}
+@keyframes wmscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* [EDIT] How to order（オーダーの流れ）*/
+.order{background:#fff;padding:6px 14px 30px;}
+.order-title{display:block;width:100%;margin-bottom:14px;}
+.order-steps{display:flex;align-items:flex-start;justify-content:center;gap:2px;}
+.ostep{flex:1;text-align:center;}
+.ocircle{position:relative;width:80px;height:80px;margin:0 auto 10px;border-radius:50%;
+  background:linear-gradient(135deg,#fcd9e3 0%,var(--pink-deep) 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 14px rgba(243,167,189,.45),inset 0 2px 5px rgba(255,255,255,.6);}
+.ocircle .ico{width:38px;height:38px;color:#fff;}
+.ocircle .onum{position:absolute;top:-6px;right:0;width:26px;height:26px;border-radius:50%;
+  background:#fff;color:var(--pink-deep);font-family:"Baloo 2",sans-serif;font-weight:800;font-size:14px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+.ostep p{font-size:11px;color:#6A6A6A;font-weight:700;line-height:1.45;}
+.oarrow{flex:0 0 auto;color:var(--pink-deep);font-size:26px;font-weight:800;padding-top:24px;}
+/* [EDIT] 豊富なカラー */
+.colorsec{background:var(--pink-bg);padding:22px 18px 14px;text-align:center;}
+.color-title{display:block;width:78%;max-width:320px;margin:0 auto 8px;}
+.color-sub{font-size:12px;color:#6A6A6A;font-weight:700;margin-bottom:14px;}
+.color-white{background:#fff;margin:10px -18px -14px;padding:16px 18px 18px;}
+.color-img{display:block;width:62%;max-width:240px;margin:0 auto;border-radius:14px;box-shadow:0 3px 10px rgba(243,167,189,.2);}
+/* [IMAGE] 作品事例（正方形3列グリッド・スクロールなしで一覧）*/
+.works{background:#fff;padding:6px 14px 18px;}
+.works-label{font-size:11.5px;letter-spacing:.16em;margin-bottom:10px;}
+.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.works-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;display:block;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);}
+.heart-card{position:relative;width:125px;height:111px;flex-shrink:0;
+  background:url('images/img02.png') center/contain no-repeat;
+  display:flex;align-items:center;justify-content:center;}
+.heart-card .txt{width:70%;text-align:center;margin-top:-8px;}
+.heart-card .star{color:#ffb14e;font-size:7px;letter-spacing:.5px;}
+.heart-card p{font-size:7px;color:#6A6A6A;font-weight:700;line-height:1.35;margin-top:1px;}
+.heart-card .hname{font-size:6.5px;color:var(--pink-deep);font-weight:700;margin-top:3px;}
+@keyframes hmscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============ ⑧ 強み・実績 ============ */
+.strength-sec{background:var(--blue);}
+.strength{display:flex;flex-direction:column;gap:22px;}
+.str .cap{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;margin-bottom:10px;}
+.str .cap .n{background:var(--pink-deep);color:#fff;width:26px;height:26px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;font-family:"Baloo 2",sans-serif;}
+.tag-row{display:flex;flex-wrap:wrap;gap:7px;}
+.tag{background:var(--pink-bg);color:var(--pink-deep);font-size:11.5px;font-weight:700;
+  padding:5px 11px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;}
+.tag .ico{width:16px;height:16px;}
+
+/* ============ ⑨ 注文の流れ ============ */
+.flow{background:var(--greige);}
+.steps{display:flex;flex-direction:column;}
+.step{display:flex;gap:14px;align-items:flex-start;position:relative;padding-bottom:22px;}
+.step:not(:last-child)::before{content:"";position:absolute;left:21px;top:46px;
+  bottom:0;width:2px;background:var(--pink);}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--pink-deep);
+  color:#fff;font-size:19px;font-weight:800;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;z-index:1;font-family:"Baloo 2",sans-serif;
+  box-shadow:0 3px 8px rgba(243,167,189,.5);}
+.step .body{padding-top:2px;}
+.step .body b{font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;}
+.step .body b .ico{width:22px;height:22px;}
+.step .body span{font-size:12.5px;color:var(--ink-soft);}
+
+/* ============ ⑩ 想い ============ */
+.thought{background:var(--pink-bg);text-align:center;padding:13px 20px 24px;}
+.msg-title{display:block;width:56%;max-width:230px;margin:0 auto 10px;}
+.thought .quote{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;font-weight:800;font-size:17px;line-height:1.15;}
+.thought .quote::before{content:"";}
+.thought .quote::after{content:"";}
+.thought p{font-size:13px;color:var(--ink-soft);margin-top:14px;}
+
+/* ============ ⑪ プロフィール ============ */
+.profile{text-align:center;}
+.profile .avatar{width:110px;height:110px;border-radius:50%;margin:0 auto 14px;
+  overflow:hidden;background:var(--pink-bg);border:3px solid var(--pink);}
+.avatar-img{width:120px;height:120px;border-radius:50%;object-fit:cover;display:block;
+  margin:0 auto 14px;border:3px solid var(--pink);box-shadow:0 4px 10px rgba(243,167,189,.3);}
+.prof-name{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",sans-serif;
+  font-weight:800;font-size:15.5px;color:#6A6A6A;line-height:1.5;}
+.prof-bio{font-size:12.5px;color:#6A6A6A;line-height:1.85;text-align:center;
+  max-width:340px;margin:14px auto 0;}
+.profile h3{font-size:18px;font-weight:700;}
+.profile .role{font-size:12px;color:var(--pink-deep);font-weight:700;margin:4px 0 12px;}
+.profile p{font-size:13px;color:var(--ink-soft);}
+
+/* ============ ⑫ CTA＋緊急性 ============ */
+.urgent{background:#FDFCE8;text-align:center;color:#6A6A6A;}
+.urgent .badge{display:inline-block;background:var(--pink-deep);color:#fff;
+  font-size:12px;font-weight:800;padding:6px 14px;border-radius:999px;margin-bottom:14px;}
+.urgent h2{font-size:22px;font-weight:700;line-height:1.55;margin-bottom:18px;color:var(--pink-deep);}
+.urgent-img{display:block;width:100%;max-width:400px;margin:0 auto 14px;}
+.urgent .cta-img-btn.urgent-cta{max-width:213px;}
+.urgent .bonbon{background:#fff;color:var(--pink-deep);
+  box-shadow:0 10px 22px rgba(0,0,0,.18),inset 0 3px 6px rgba(255,255,255,.9),
+             inset 0 -5px 8px rgba(243,167,189,.4);}
+.urgent .bonbon .txt{text-shadow:none;}
+
+/* ============ ⑬ フローティングCTA ============ */
+.floating{position:fixed;bottom:0;left:0;right:0;z-index:50;max-width:430px;
+  margin:0 auto;padding:10px 14px;background:rgba(255,255,255,.9);
+  backdrop-filter:blur(6px);box-shadow:0 -4px 16px rgba(0,0,0,.08);}
+.floating a{display:flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(180deg,#ffb6cf 0%,var(--pink-deep) 100%);
+  color:#fff;font-size:15px;font-weight:800;padding:14px;
+  border-radius:14px;text-decoration:none;box-shadow:0 4px 10px rgba(243,167,189,.45);}
+.floating a .ico{width:20px;height:20px;color:#fff;}
+.footer{text-align:center;padding:22px 18px;background:#fff;}
+.footer-links{margin-bottom:8px;}
+.footer-links a{color:#6A6A6A;font-size:12px;text-decoration:underline;font-weight:700;}
+.footer-links .sep{color:var(--pink);margin:0 8px;font-size:12px;}
+.copyright{font-size:10px;color:var(--ink-soft);}
+
+/* ============ CTAボタン（画像版）============ */
+/* [CTA IMAGE] ボタン画像。差し替える時はこの background の url(...) を新しい画像に */
+.cta-img-btn{display:block;width:90%;max-width:320px;margin:0 auto;
+  aspect-ratio:700/176;cursor:pointer;border:none;
+  background:url('images/img03.png') center/contain no-repeat;
+  text-indent:-9999px;white-space:nowrap;overflow:hidden;
+  filter:drop-shadow(0 8px 16px rgba(243,167,189,.45));
+  animation:bob 2.6s ease-in-out infinite;transition:transform .12s ease;}
+.cta-img-btn:active{transform:scale(.97);}
+.cta-small{max-width:213px;margin-top:16px;}
+.more-lead{width:calc(100% + 40px);margin:18px -20px 0;background:#FBEAF0;
+  text-align:center;font-weight:800;color:#6A6A6A;font-size:17px;letter-spacing:.08em;padding:16px 0 6px;}
+</style>
+<!-- ===== Meta Pixel（枠）=====
+     広告のコンバージョン計測用。運用開始時に「YOUR_PIXEL_ID」を実際のピクセルID（15〜16桁）に2箇所とも差し替え -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+<!-- ===== End Meta Pixel ===== -->
+</head>
+
+<body>
+
+<!-- ===================================================================
+  [ICON] アイコンのイラスト集（SVG）。
+  自作イラストに変えたい時は、本文側の <svg><use href="#ic-xxx"/></svg> を
+  <img src="あなたのイラスト.png" alt="説明"> に置き換えるだけでOK。
+==================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="_s" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
+  </defs>
+  <symbol id="ic-cake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 21h16"/><path d="M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/>
+    <path d="M4 16c1 0 1.4 1 2.6 1s1.4-1 2.6-1 1.4 1 2.6 1 1.4-1 2.6-1 1.4 1 2.6 1"/>
+    <path d="M12 8V5"/><circle cx="12" cy="4" r="1"/></symbol>
+  <symbol id="ic-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 8a2 2 0 0 1 2-2h1.5L8 4h8l1.5 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    <circle cx="12" cy="13" r="3.4"/></symbol>
+  <symbol id="ic-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="9" width="16" height="12" rx="1.5"/><path d="M4 13h16M12 9v12"/>
+    <path d="M12 9C11 5 8 4.5 7.2 6c-.8 1.5 1.3 3 4.8 3zM12 9c1-4 4-4.5 4.8-3 .8 1.5-1.3 3-4.8 3z"/></symbol>
+  <symbol id="ic-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 21C7 17 3 13 3 8.6 3 6 5 4 7.4 4c1.7 0 3.1 1 4.6 2.6C13.5 5 14.9 4 16.6 4 19 4 21 6 21 8.6 21 13 17 17 12 21z"/></symbol>
+  <symbol id="ic-sad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/><path d="M8.5 15.5c1-1.3 2.3-2 3.5-2s2.5.7 3.5 2"/>
+    <path d="M9 10h.01M15 10h.01"/></symbol>
+  <symbol id="ic-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3a9 9 0 1 0 0 18c1 0 1.5-1 1-2s0-2 1-2h2a4 4 0 0 0 4-4c0-5-4.5-8-8-8z"/>
+    <circle cx="8" cy="11" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="11" r="1"/></symbol>
+  <symbol id="ic-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l1.8 5.7L20 10l-6.2 1.3L12 17l-1.8-5.7L4 10l6.2-1.3z"/></symbol>
+  <symbol id="ic-star" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 3l2.5 5.2 5.7.7-4.2 3.9 1.1 5.6L12 16.9 6.9 18.4 8 12.8 3.8 8.9l5.7-.7z"/></symbol>
+  <symbol id="ic-frame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 16l4-4 3 3 4-5 5 6"/><circle cx="9" cy="9" r="1.1"/></symbol>
+  <symbol id="ic-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 8l9-4 9 4-9 4z"/><path d="M3 8v9l9 4 9-4V8"/><path d="M12 12v9"/></symbol>
+  <symbol id="ic-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 8h12l-1 12H7z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></symbol>
+  <symbol id="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4M9 21h6"/></symbol>
+  <symbol id="ic-train" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="6" y="4" width="12" height="13" rx="3"/><path d="M6 11h12"/><path d="M8 21l2-3M16 21l-2-3"/><circle cx="9.5" cy="14" r=".8"/><circle cx="14.5" cy="14" r=".8"/></symbol>
+  <symbol id="ic-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 8h11v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5z"/><path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3v2M11 3v2"/></symbol>
+  <symbol id="ic-line" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 3C6.9 3 3 6.4 3 10.5c0 3.7 3.3 6.8 7.7 7.4.3.06.7.2.8.5.07.25 0 .6 0 .6l-.13.8c-.04.24-.2.95.83.52 1-.44 5.6-3.3 7.6-5.7 1.4-1.5 2.1-3 2.1-4.7C24 6.4 20.1 3 15 3" transform="translate(-1.5)"/></symbol>
+</svg>
+
+<div class="wrap">
+
+  <!-- ============ ① 最上部の帯（流れるティッカー）============ -->
+  <div class="topbar"><div class="ticker" role="img" aria-label="推し活フェイクケーキ"></div></div>
+
+  <!-- ============ ② ファーストビュー ============ -->
+  <section class="fv">
+
+    <!-- [TITLE IMAGE] タイトル画像（差し替えは src を変更）-->
+    <img class="fv-fullimg" src="images/img04.jpg" alt="こんなの欲しかった／ファンサGET報告が続々｜推し色の誕生日ケーキ">
+
+    <p class="sub">持ち運びが大変・食べきれない・推しに気づいてもらいたい💭<br><span class="sub-strong">そんな悩みを全て解決します！</span></p>
+    <!-- [LINK] このCTAボタンはサブ文言直下に設置 -->
+    <a class="cta-img-btn fv-cta" href="https://lin.ee/sQ12N5t" target="_blank" rel="noopener" aria-label="次回販売会をチェックする">次回販売会をチェックする</a>
+    <!-- [IMAGE] 悩みリスト画像（1つ目のCTAボタンの下）-->
+    <img class="fv-fullimg" src="images/img05.jpg" alt="こんな悩みありませんか？ 本人不在の生誕祭あるある" style="margin:16px -20px 0;">
+    <!-- [EDIT] リード文（悩み→解決のつなぎ）-->
+    <div class="solve-lead">その悩み・・・</div>
+    <!-- [IMAGE] 100%解決画像（悩みイラストの下）-->
+    <img class="fv-fullimg" src="images/img06.jpg" alt="推し活フェイクケーキで100パーセント解決" style="margin:0 -20px 12px;">
+
+    <!-- [IMAGE] メイン写真3枚（正方形・横並び）。差し替えは各 src を変更 -->
+    <div class="mainshots">
+      <img src="images/img07.jpg" alt="持ち運びできる推し活ケーキ">
+      <img src="images/img08.jpg" alt="ブルーの推し色バースデーケーキ">
+      <img src="images/img09.jpg" alt="名入りプレート付き推し色ケーキ">
+    </div>
+
+    <!-- [EDIT] ベネフィット枠（4列×2列）-->
+    <div class="benefit-grid8">
+      <div class="bchip"><b>崩れない</b><span>大荷物でも遠征でも◎</span></div>
+      <div class="bchip"><b>ファンサGET</b><span>イベントやチェキ会に持ち込める</span></div>
+      <div class="bchip"><b>常温OK</b><span>ヘアメ立ち寄り<br>暑い日も安心</span></div>
+      <div class="bchip"><b>賞味期限なし</b><span>生誕祭直前でも<br>手配OK</span></div>
+      <div class="bchip"><b>苦手でもOK</b><span>甘いもの苦手<br>アレルギーでも◎</span></div>
+      <div class="bchip"><b>記念に残せる</b><span>プリクラや<br>おしゃピクにも◎</span></div>
+      <div class="bchip"><b>2〜3段も配送</b><span>豪華な祭壇でも<br>存在感</span></div>
+      <div class="bchip"><b>別日に使える</b><span>体調不良・悪天候で予定変更でも◎</span></div>
+    </div>
+
+    <!-- [LINK] ベネフィット枠下のCTA（1つ目の2/3サイズ）-->
+    <a class="cta-img-btn cta-small" href="https://lin.ee/sQ12N5t" target="_blank" rel="noopener" aria-label="次回販売会をチェックする">次回販売会をチェックする</a>
+
+    <!-- [EDIT] さらに…リード -->
+    <div class="more-lead">さらに・・・</div>
+    <!-- [IMAGE] ファンサGET報告 画像 -->
+    <img class="fv-fullimg" src="images/img10.jpg" alt="「ファンサGETしました」報告が続々" style="margin:0 -20px 0;">
+
+  </section>
+
+  <!-- ============ 口コミ（ハート型・横スライド）============ -->
+  <section class="gallery" aria-label="お客さまの口コミ">
+    <!-- [EDIT] 口コミ：一言＋「何推しか」。文言はここを編集 -->
+    <div class="heart-marquee">
+      <div class="hm-track" style="animation-duration:46s">
+        <div class="heart-card"><div class="txt"><p>推しにプレゼントしたら公式SNSにケーキの写真を載せてくれました</p><div class="hname">男性アーティスト推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>イベントに持参したらローソクの火を消すみたいにフーってしてくれました</p><div class="hname">男性パフォーマー推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>Xに投稿したら推しがいいね！してくれました</p><div class="hname">有名歌い手推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>番組観覧に持って行ったら推しがファンサくれました</p><div class="hname">有名男性アイドル推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>周年ライブに2年連続持って行ったら「昨年も持ってきてくれたよね！」って推しが覚えていてくれました</p><div class="hname">男性アイドル推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>推しにプレゼントしたらケーキを持って配信してくれました</p><div class="hname">男性俳優推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>イベント前にプレゼントBOXに入れたらステージで持ってくれました</p><div class="hname">K-POPアイドル推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>推しにプレゼントしたら公式SNSにケーキの写真を載せてくれました</p><div class="hname">男性アーティスト推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>イベントに持参したらローソクの火を消すみたいにフーってしてくれました</p><div class="hname">男性パフォーマー推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>Xに投稿したら推しがいいね！してくれました</p><div class="hname">有名歌い手推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>番組観覧に持って行ったら推しがファンサくれました</p><div class="hname">有名男性アイドル推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>周年ライブに2年連続持って行ったら「昨年も持ってきてくれたよね！」って推しが覚えていてくれました</p><div class="hname">男性アイドル推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>推しにプレゼントしたらケーキを持って配信してくれました</p><div class="hname">男性俳優推し</div></div></div>
+        <div class="heart-card"><div class="txt"><p>イベント前にプレゼントBOXに入れたらステージで持ってくれました</p><div class="hname">K-POPアイドル推し</div></div></div>
+      </div>
+    </div>
+    <p class="hm-note">実際のDMはインスタのハイライトで公開中</p>
+    <!-- [IMAGE] 実際のDMスクショ（小さく横1列・スワイプ）差し替えは各src -->
+    <div class="dm-row">
+      <img src="images/img11.jpg" alt="お客さまのDM口コミ">
+      <img src="images/img12.jpg" alt="お客さまのDM口コミ">
+      <img src="images/img13.jpg" alt="お客さまのDM口コミ">
+      <img src="images/img14.jpg" alt="お客さまのDM口コミ">
+      <img src="images/img15.jpg" alt="お客さまのDM口コミ">
+      <img src="images/img16.jpg" alt="お客さまのDM口コミ">
+    </div>
+  </section>
+
+  <!-- [IMAGE] 「選ばれる理由」見出し画像（口コミの下）-->
+  <img src="images/img17.jpg" alt="小林の推し活フェイクケーキが選ばれる理由" style="display:block;width:100%;">
+  <!-- ============ 選ばれる理由（中身）============ -->
+  <section class="reasons">
+    <!-- [EDIT] 理由①（②③はこの.reasonを複製して追加）-->
+    <div class="reason">
+      <span class="rnum">1</span>
+      <p><b>長年の推し活経験を活かして、ファンサにつながる確率をアップˎˊ˗</b><span class="secret">その工夫は企業秘密です</span></p>
+    </div>
+    <!-- [EDIT] 理由② -->
+    <div class="reason">
+      <span class="rnum">2</span>
+      <p><b>推し活ガチ勢だからこその着眼点と<br>実際の使用シーンを理解した提案</b></p>
+    </div>
+
+    <!-- [EDIT] お客様の声を紹介（口コミ）文言はここを編集 -->
+    <div class="voice-intro">
+      <div class="vi-title">＼ お客様の声を紹介 ／</div>
+      <div class="vi-card"><p>過去の投稿やレビューを見て決めました！<br>色や見た目何もかも想像以上で過去1の生誕祭になりました！</p><span class="vi-oshi">男性アイドル推し</span></div>
+      <div class="vi-card"><p>親身になって相談にのってくれて、丁寧な対応が嬉しかったです。届いたケーキもとても可愛くてしあわせな気持ちになりました。</p><span class="vi-oshi">人気アニメキャラ推し</span></div>
+      <p class="vi-note">実際のDMはインスタのハイライトで公開中</p>
+    </div>
+    <!-- [IMAGE] 制作事例スライド（自動・横流れ）差し替えは各src -->
+    <div class="work-marquee">
+      <div class="wm-track">
+        <img src="images/img18.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img19.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img20.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img21.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img22.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img23.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img24.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img25.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img26.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img18.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img19.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img20.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img21.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img22.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img23.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img24.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img25.jpg" alt="推し活ケーキ制作事例">
+        <img src="images/img26.jpg" alt="推し活ケーキ制作事例">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 豊富なカラー ============ -->
+  <section class="colorsec">
+    <!-- [IMAGE] カラー見出し画像（差し替えは src）-->
+    <img class="color-title" src="images/img27.png" alt="選ぶワクワク">
+    <div class="color-white">
+      <p class="color-sub">豊富なカラーから自分好みにカスタムできる</p>
+    <img class="color-img" src="images/img28.jpg" alt="カラーチャート 18色以上から選べる">
+    </div>
+  </section>
+
+  <!-- ============ 作品事例（正方形グリッド）============ -->
+  <section class="works">
+    <div class="sec-label en works-label">GALLERY</div>
+    <div class="works-grid">
+        <img src="images/img29.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img30.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img31.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img32.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img33.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img34.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img35.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img36.jpg" alt="推し色フェイクケーキ作品事例">
+        <img src="images/img37.jpg" alt="推し色フェイクケーキ作品事例">
+    </div>
+  </section>
+
+  <!-- ============ How to order（オーダーの流れ）============ -->
+  <section class="order">
+    <img class="order-title" src="images/img38.jpg" alt="How to order オーダーの流れ">
+    <div class="order-steps">
+      <div class="ostep">
+        <div class="ocircle"><span class="onum">1</span><span class="ico"><svg><use href="#ic-bag"/></svg></span></div>
+        <p>オンラインショップで<br>デザインを選択</p>
+      </div>
+      <div class="oarrow">›</div>
+      <div class="ostep">
+        <div class="ocircle"><span class="onum">2</span><span class="ico"><svg><use href="#ic-palette"/></svg></span></div>
+        <p>色やオプションを<br>選択</p>
+      </div>
+      <div class="oarrow">›</div>
+      <div class="ostep">
+        <div class="ocircle"><span class="onum">3</span><span class="ico"><svg><use href="#ic-box"/></svg></span></div>
+        <p>ご入金日から<br>約30日後に発送</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ⑩ 想い ============ -->
+  <section class="thought">
+    <!-- [IMAGE] Message見出し画像（差し替えは src）-->
+    <img class="msg-title" src="images/img39.png" alt="Message">
+    <!-- [EDIT] 手書き風フォント -->
+    <p class="quote">お届けするのは<br>フェイクケーキとその先に広がる体験</p>
+    <p>フェイクケーキを通して<br><br>「生誕祭の苦労を解決したい」<br>「推しに気づいてもらいたい」<br>「ファンサもらいたい」<br><br>そんな願いを叶えるお手伝い<br>それが私の役目です。</p>
+  </section>
+
+  <!-- ============ ⑫ CTA＋緊急性 ============ -->
+  <section class="urgent">
+    <!-- [IMAGE] 緊急性の見出し画像（差し替えは src）-->
+    <img class="urgent-img" src="images/img40.png" alt="受付は月に1〜2回だけ／1ヶ月に作れる数に限りがあります／次の販売会を逃さないでください">
+    <!-- [LINK] -->
+    <a class="cta-img-btn urgent-cta" href="https://lin.ee/sQ12N5t" target="_blank" rel="noopener" aria-label="次回販売会をチェックする">次回販売会をチェックする</a>
+  </section>
+
+  <!-- ============ ⑪ プロフィール ============ -->
+  <section class="profile">
+    <div class="sec-label en">PROFILE</div>
+    <!-- [IMAGE] プロフィール写真 -->
+    <!-- [IMAGE] プロフィール写真（差し替えは src）-->
+    <img class="avatar-img" src="images/img41.jpg" alt="小林 プロフィール写真">
+    <!-- [EDIT] 名前・肩書き・自己紹介 -->
+    <h3 class="prof-name">小林｜推し活フェイクケーキでオタクを救う</h3>
+    <div class="role">推し活歴20年以上</div>
+    <p class="prof-bio">初めての推しは小学生のとき、当時大人気だった<br>アーティスト。その後20年以上推し続けたガチ勢オタク<br>推しのことで頭がいっぱいだった私も、現在は子ども中心の生活。長年の推し活経験で得た知識や着眼点を<br>いま推し活に全力な人のために役立てたい<br>そんな想いで発信しています。</p>
+  </section>
+
+  <div class="footer">
+    <!-- [LINK] BASEの特商法ページ・プライバシーポリシーのURLに差し替え -->
+    <div class="footer-links">
+      <a href="https://meril.buyshop.jp/law" target="_blank" rel="noopener">特定商取引法に基づく表記</a>
+      <span class="sep">｜</span>
+      <a href="https://meril.buyshop.jp/privacy" target="_blank" rel="noopener">プライバシーポリシー</a>
+    </div>
+    <div class="copyright">© 2026 Meril / 推し活フェイクケーキ</div>
+  </div>
+
+</div><!-- /.wrap -->
+
+<!-- ============ ⑬ フローティングCTA（LINE）============ -->
+<!-- [LINK] href を公式LINEのURLに差し替え -->
+<div class="floating">
+  <a href="https://lin.ee/sQ12N5t" target="_blank" rel="noopener">
+    <span class="ico"><svg><use href="#ic-line"/></svg></span> LINEで販売会の通知を受け取る
+  </a>
+</div>
+
+</body>
+</html>
